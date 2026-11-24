@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dashboard สรุปผลการควบคุมคุณภาพ EQA</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--fg:#1c1c1c;--red:#b71c1c;--red2:#f44336;--navy:#3949ab;--teal:#5fafb8;--teal2:#00838f;--card:#b2ebf2;--row:#eaf0fd;--side:#bdbdbd;--sideh:#9e9e9e;--on:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15171c;--fg:#eee;--row:#232a44;--side:#3a3d45;--sideh:#2c2f36;--card:#1f4d55}}
+:root[data-theme="dark"]{--bg:#15171c;--fg:#eee;--row:#232a44;--side:#3a3d45;--sideh:#2c2f36;--card:#1f4d55}
+html{color-scheme:light dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:'Sarabun',Tahoma,sans-serif;padding:12px}
+.wrap{max-width:1100px;margin:auto}
+header{display:flex;align-items:center;gap:14px}
+.logo{width:90px;height:90px;border-radius:50%;border:3px solid #1b5e20;background:#fff;color:#1b5e20;display:flex;align-items:center;justify-content:center;text-align:center;font-size:11px;font-weight:700;flex:none}
+.title{flex:1;background:var(--red);color:#fff;border-radius:50px;padding:14px 24px;text-align:center;font-weight:700;font-size:clamp(15px,2.4vw,24px);line-height:1.3}
+.grid{display:grid;grid-template-columns:200px 1fr;gap:16px;margin-top:18px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}header{flex-direction:column}}
+.filter{background:var(--side);border-radius:4px;box-shadow:0 2px 4px #0004;margin-bottom:16px;overflow:hidden;color:#111}
+.filter h4{margin:0;background:var(--red);color:#fff;padding:8px 14px;font-size:15px}
+.filter .list{padding:8px 10px;max-height:150px;overflow:auto}
+.filter label{display:flex;align-items:center;gap:8px;padding:5px 2px;font-size:13px;cursor:pointer}
+.filter input[type=text]{width:100%;border:0;border-bottom:1px solid #888;background:var(--sideh);padding:8px 10px;font:inherit;font-size:13px;color:#111}
+.top{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.pie{flex:1;min-width:230px}
+.pie h3{margin:0 0 8px;font-size:15px}
+.pie-row{display:flex;align-items:center;gap:10px;font-size:11px}
+.pie-c{width:140px;height:140px;border-radius:50%;background:conic-gradient(#b07fe6 0 100%);display:flex;align-items:center;justify-content:center;font-size:10px;color:#222}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#b07fe6;margin-right:4px}
+.kpis{display:flex;gap:16px;flex:1.4;min-width:260px}
+.kpi{flex:1;text-align:center}
+.kpi b{display:block;font-size:17px;margin-bottom:6px}
+.kpi div{background:var(--card);border-radius:12px;padding:6px;color:#111;font-size:11px}
+.kpi div span{display:block;font-size:26px;font-weight:600}
+.panels{display:grid;grid-template-columns:230px 1fr;gap:16px;margin-top:16px}
+@media(max-width:800px){.panels{grid-template-columns:1fr}}
+.bar{background:var(--red2);color:#fff;text-align:center;font-weight:700;padding:7px;border-radius:5px;font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:var(--navy);color:#fff;padding:7px 6px}
+.t1 td{background:var(--row);padding:8px;border-bottom:1px solid var(--navy);text-align:center}
+.t2 td{background:var(--teal);color:#06262b;padding:9px 8px;border-bottom:1px solid #00695c;text-align:center}
+.foot{background:var(--teal2);color:#fff;text-align:right;padding:6px 12px;font-size:11px}
+.scroll{overflow:auto;max-height:280px}
+.big{margin-top:16px}
+.big .bar{font-size:20px;border-radius:12px;padding:10px;margin-bottom:8px}
+.xs{overflow-x:auto}
+.t3 td{background:var(--row);padding:9px 6px;text-align:center;border-bottom:1px solid #fff}
+.t3 td:first-child{background:var(--side);color:#111;font-weight:600}
+.t3 th{font-size:12px;white-space:nowrap}
+.low{color:#c62828;font-weight:700}
+
+.tabs{display:flex;gap:8px;margin:14px 0 0}
+.tabs button,.btn{border:0;border-radius:20px;padding:8px 18px;font:inherit;font-weight:600;cursor:pointer;background:var(--side);color:#111}
+.tabs button.on,.btn.p{background:var(--navy);color:#fff}
+.btn.d{background:var(--red2);color:#fff;padding:4px 10px;font-size:12px}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0;align-items:end}
+.form label{font-size:12px;display:flex;flex-direction:column;gap:3px}
+.form input,.form select{font:inherit;font-size:14px;padding:7px;border:1px solid #888;border-radius:6px;background:var(--bg);color:var(--fg);width:100%}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin:12px 0}
+.card{border:1px solid var(--side);border-radius:10px;padding:12px;margin-top:12px}
+.hide{display:none}
+.legend{font-size:11px;display:flex;flex-direction:column;gap:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo">โรงพยาบาล<br>วังเจ้า</div>
+  <div class="title">Dashboard สรุปผลการควบคุมคุณภาพการตรวจวิเคราะห์โดยองค์กรภายนอก (EQA)<br>กลุ่มงานเทคนิคการแพทย์ โรงพยาบาลวังเจ้า จังหวัดตาก</div>
+</header>
+
+<div class="tabs"><button class="on" id="tabD" onclick="showTab('dash')">แดชบอร์ด</button><button id="tabE" onclick="showTab('entry')">คีย์ข้อมูล</button></div><div id="dash"><div class="grid">
+  <aside>
+    <div class="filter"><h4>ปี</h4><div class="list" id="years"></div></div>
+    <div class="filter"><h4>งาน</h4><div class="list" id="units"></div></div>
+  </aside>
+  <main>
+    <div class="top">
+      <div class="pie"><h3>จำนวนรายการที่เปิดทำ EQA ตามกลุ่มงาน</h3>
+        <div class="pie-row"><div class="pie-c" id="pie"></div><div class="legend" id="legend"></div></div></div>
+      <div class="kpis">
+        <div class="kpi"><b>รายการที่เปิดทำ EQA</b><div>จำนวน<span id="kOpen">2</span></div></div>
+        <div class="kpi"><b>รายการที่ยังไม่เปิดทำ EQA</b><div>จำนวน<span id="kNot">27</span></div></div>
+      </div>
+    </div>
+    <div class="panels">
+      <div><div class="bar">รายการทดสอบที่ยังไม่ทำ EQA</div>
+        <div class="scroll" style="max-height:230px"><table class="t1"><thead><tr><th>รายการทดสอบ</th></tr></thead><tbody id="notDone"></tbody></table></div>
+        <div class="foot" id="notFoot" style="text-align:center"></div></div>
+      <div><div class="bar">รายการทดสอบที่เปิดทำ EQA</div>
+        <div class="scroll" style="max-height:230px"><table class="t2"><thead><tr><th style="width:40%">รายการทดสอบ</th><th>เกณฑ์การยอมรับ</th><th>ครั้ง/ปี</th></tr></thead><tbody id="done"></tbody></table></div>
+        <div class="foot" id="doneFoot"></div></div>
+    </div>
+  </main>
+</div>
+
+<section class="big">
+  <div class="bar">ตารางแสดงการควบคุมคุณภาพการตรวจวิเคราะห์โดยองค์กรภายนอก</div>
+  <div class="xs"><table class="t3"><thead><tr><th>งาน</th><th>ลำดับ</th><th>ม.ค.</th><th>ก.พ.</th><th>มี.ค.</th><th>เม.ย.</th><th>พ.ค.</th><th>มิ.ย.</th><th>ก.ค.</th><th>ส.ค.</th><th>ก.ย.</th><th>ต.ค.</th><th>พ.ย.</th><th>ธ.ค.</th></tr></thead><tbody id="monthly"></tbody></table></div>
+  <div class="foot" id="monFoot" style="text-align:center"></div>
+</section>
+</div>
+<section id="entry" class="hide">
+ <div class="card"><div class="bar">1) เพิ่ม/แก้ไข รายการทดสอบ</div>
+  <div class="form">
+   <label>รายการทดสอบ<input id="tName" placeholder="เช่น Glucose"></label>
+   <label>งาน<select id="tUnit"></select></label>
+   <label>เกณฑ์การยอมรับ<input id="tCrit" value="Z-score evaluation ≤ 2.00"></label>
+   <label>ครั้ง/ปี<input id="tTimes" type="number" min="0" value="24"></label>
+   <label>สถานะ<select id="tOpen"><option value="1">เปิดทำ EQA</option><option value="0">ยังไม่เปิดทำ</option></select></label>
+   <button class="btn p" onclick="addTest()">เพิ่มรายการ</button>
+  </div>
+  <div class="scroll"><table class="t1"><thead><tr><th>รายการ</th><th>งาน</th><th>เกณฑ์</th><th>ครั้ง/ปี</th><th>สถานะ</th><th></th></tr></thead><tbody id="tList"></tbody></table></div>
+ </div>
+ <div class="card"><div class="bar">2) คีย์คะแนนควบคุมคุณภาพรายเดือน</div>
+  <div class="form">
+   <label>ปี (พ.ศ.)<input id="sYear" type="number" value="2569"></label>
+   <label>งาน<select id="sUnit"></select></label>
+   <label>ลำดับ<input id="sOrder" type="number"></label>
+  </div>
+  <div class="mgrid" id="mgrid"></div>
+  <button class="btn p" onclick="saveScore()">บันทึกคะแนน</button> <span id="msg" style="font-size:13px"></span>
+ </div>
+ <div class="card"><div class="bar">3) สำรอง/นำเข้าข้อมูล</div>
+  <p style="font-size:13px">ข้อมูลถูกเก็บในเบราว์เซอร์เครื่องนี้ ควรกดส่งออกเก็บไว้เป็นไฟล์เป็นระยะ</p>
+  <button class="btn p" onclick="exportData()">ส่งออก JSON</button>
+  <label class="btn">นำเข้า JSON<input type="file" accept=".json" hidden onchange="importData(this)"></label>
+  <button class="btn d" onclick="resetData()">ล้างข้อมูลทั้งหมด</button>
+ </div>
+</section>
+</div>
+<script>
+const UNITS=['จุลชีววิทยา','ภูมิคุ้มกันวิทยา','ธนาคารเลือด','เกณฑ์การควบคุมคุณภาพ ≥ 80','จุลทรรศนศาสตร์คลินิก','โลหิตวิทยา','เคมีคลินิก'];
+const COLORS=['#b07fe6','#4db6ac','#ffb74d','#64b5f6','#f06292','#aed581','#ba68c8'];
+const KEY='eqa-data-v1';
+let D={tests:[],scores:{}};
+const demo=()=>({tests:[['Glucose','เคมีคลินิก'],['Total protein','เคมีคลินิก'],['Creatinine','เคมีคลินิก'],['Hb','โลหิตวิทยา'],['Hct','โลหิตวิทยา']].map((r,i)=>({id:i+1,name:r[0],unit:r[1],crit:'Z-score evaluation ≤ 2.00',times:24,open:i<2||i==3?1:0})),
+ scores:{'2569':{'เคมีคลินิก':{order:2,m:[195.45,186.36,172.07,190.45,190.91,195.45,189.89,181.1,189.89,100,95.45,95.45]},'โลหิตวิทยา':{order:4,m:[180.83,180.83,180.83,187.08,180.42,180.42,186.61,186.61,193.75,81.25,81.25,81.25]}}}});
+try{D=JSON.parse(localStorage.getItem(KEY))||demo()}catch(e){D=demo()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){}}
+const $=id=>document.getElementById(id);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let selUnits=new Set(UNITS),selYears=new Set(['2569']);
+function years(){return [...new Set(['2568','2569',...Object.keys(D.scores)])].sort()}
+function filters(){
+  $('years').innerHTML=years().map(y=>`<label><input type="checkbox" value="${y}" ${selYears.has(y)?'checked':''}> ${y}</label>`).join('');
+  $('units').innerHTML=UNITS.map(u=>`<label><input type="checkbox" value="${u}" ${selUnits.has(u)?'checked':''}> ${u}</label>`).join('');
+}
+$('years').onchange=e=>{e.target.checked?selYears.add(e.target.value):selYears.delete(e.target.value);render()};
+$('units').onchange=e=>{e.target.checked?selUnits.add(e.target.value):selUnits.delete(e.target.value);render()};
+function render(){
+  const open=D.tests.filter(t=>t.open==1&&selUnits.has(t.unit)),not=D.tests.filter(t=>t.open!=1&&selUnits.has(t.unit));
+  $('kOpen').textContent=open.length;$('kNot').textContent=not.length;
+  const cnt={};open.forEach(t=>cnt[t.unit]=(cnt[t.unit]||0)+1);
+  const ks=Object.keys(cnt),tot=open.length;let acc=0;
+  $('pie').style.background=tot?'conic-gradient('+ks.map(k=>{const a=acc;acc+=cnt[k]/tot*100;return `${COLORS[UNITS.indexOf(k)%7]} ${a}% ${acc}%`}).join(',')+')':'#ccc';
+  $('pie').textContent=tot?'':'ไม่มีข้อมูล';
+  $('legend').innerHTML=ks.map(k=>`<span><i class="dot" style="background:${COLORS[UNITS.indexOf(k)%7]}"></i>${esc(k)} (${cnt[k]}, ${Math.round(cnt[k]/tot*100)}%)</span>`).join('');
+  $('notDone').innerHTML=not.map((t,i)=>`<tr><td>${i+1}. &nbsp; ${esc(t.name)}</td></tr>`).join('');
+  $('notFoot').textContent=`1 - ${not.length} / ${not.length}`;
+  $('done').innerHTML=open.map((t,i)=>`<tr><td>${i+1}. &nbsp; ${esc(t.name)}</td><td>${esc(t.crit)}</td><td>${t.times}</td></tr>`).join('');
+  $('doneFoot').textContent=`1 - ${open.length} / ${open.length}`;
+  let rows='',n=0;
+  [...selYears].sort().forEach(y=>{UNITS.filter(u=>selUnits.has(u)&&D.scores[y]&&D.scores[y][u]).forEach(u=>{n++;const r=D.scores[y][u];
+    rows+=`<tr><td>${esc(u)} <small>(${y})</small></td><td>${r.order??''}</td>`+r.m.map(v=>v===''||v==null?'<td>-</td>':`<td class="${v<96?'low':''}">${Number(v).toFixed(2)}</td>`).join('')+'</tr>'})});
+  $('monthly').innerHTML=rows||'<tr><td colspan="14">ยังไม่มีข้อมูล ไปที่แท็บ "คีย์ข้อมูล"</td></tr>';
+  $('monFoot').textContent=`1 - ${n} / ${n}`;
+}
+function showTab(t){$('dash').classList.toggle('hide',t!='dash');$('entry').classList.toggle('hide',t!='entry');$('tabD').classList.toggle('on',t=='dash');$('tabE').classList.toggle('on',t=='entry');if(t=='dash')render();else entryUI()}
+function entryUI(){
+  ['tUnit','sUnit'].forEach(id=>{if(!$(id).options.length)$(id).innerHTML=UNITS.map(u=>`<option>${u}</option>`).join('')});
+  if(!$('mgrid').children.length)$('mgrid').innerHTML=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'].map((m,i)=>`<label style="font-size:12px">${m}<input type="number" step="0.01" style="width:100%;font:inherit;padding:6px;border:1px solid #888;border-radius:6px;background:var(--bg);color:var(--fg)"></label>`).join('');
+  loadScore();
+  $('tList').innerHTML=D.tests.map(t=>`<tr><td>${esc(t.name)}</td><td>${esc(t.unit)}</td><td>${esc(t.crit)}</td><td>${t.times}</td><td><button class="btn" onclick="toggleTest(${t.id})">${t.open==1?'เปิดทำ ✓':'ยังไม่เปิด'}</button></td><td><button class="btn d" onclick="delTest(${t.id})">ลบ</button></td></tr>`).join('')||'<tr><td colspan="6">ยังไม่มีรายการ</td></tr>';
+}
+function addTest(){const name=$('tName').value.trim();if(!name){$('tName').focus();return}
+  D.tests.push({id:Date.now(),name,unit:$('tUnit').value,crit:$('tCrit').value,times:+$('tTimes').value||0,open:+$('tOpen').value});
+  $('tName').value='';save();entryUI()}
+function toggleTest(id){const t=D.tests.find(x=>x.id==id);t.open=t.open==1?0:1;save();entryUI()}
+function delTest(id){if(confirm('ลบรายการนี้?')){D.tests=D.tests.filter(x=>x.id!=id);save();entryUI()}}
+function loadScore(){const r=(D.scores[$('sYear').value]||{})[$('sUnit').value];
+  $('sOrder').value=r?r.order:'';document.querySelectorAll('#mgrid input').forEach((el,i)=>el.value=r&&r.m[i]!==''&&r.m[i]!=null?r.m[i]:'')}
+$('sYear').onchange=$('sUnit').onchange=loadScore;
+function saveScore(){const y=$('sYear').value.trim();if(!y)return;
+  const m=[...document.querySelectorAll('#mgrid input')].map(e=>e.value===''?'':+e.value);
+  (D.scores[y]=D.scores[y]||{})[$('sUnit').value]={order:$('sOrder').value===''?'':+$('sOrder').value,m};
+  selYears.add(y);save();$('msg').textContent='บันทึกแล้ว ✓';setTimeout(()=>$('msg').textContent='',2000);filters()}
+function exportData(){const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(D,null,1));a.download='eqa-data.json';a.click()}
+function importData(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{D=JSON.parse(r.result);save();filters();entryUI();alert('นำเข้าสำเร็จ')}catch(e){alert('ไฟล์ไม่ถูกต้อง')}};r.readAsText(f)}
+function resetData(){if(confirm('ล้างข้อมูลทั้งหมด?')){D={tests:[],scores:{}};save();filters();entryUI()}}
+filters();render();
+</script>
+</body>
+</html>
