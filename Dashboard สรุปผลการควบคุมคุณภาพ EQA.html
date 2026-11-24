@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dashboard สรุปผลการควบคุมคุณภาพ EQA</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--fg:#1c1c1c;--red:#b71c1c;--red2:#f44336;--navy:#3949ab;--teal:#5fafb8;--teal2:#00838f;--card:#b2ebf2;--row:#eaf0fd;--side:#bdbdbd;--sideh:#9e9e9e;--on:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15171c;--fg:#eee;--row:#232a44;--side:#3a3d45;--sideh:#2c2f36;--card:#1f4d55}}
+:root[data-theme="dark"]{--bg:#15171c;--fg:#eee;--row:#232a44;--side:#3a3d45;--sideh:#2c2f36;--card:#1f4d55}
+html{color-scheme:light dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:'Sarabun',Tahoma,sans-serif;padding:12px}
+.wrap{max-width:1100px;margin:auto}
+header{display:flex;align-items:center;gap:14px}
+.logo{width:90px;height:90px;border-radius:50%;border:3px solid #1b5e20;background:#fff;color:#1b5e20;display:flex;align-items:center;justify-content:center;text-align:center;font-size:11px;font-weight:700;flex:none}
+.title{flex:1;background:var(--red);color:#fff;border-radius:50px;padding:14px 24px;text-align:center;font-weight:700;font-size:clamp(15px,2.4vw,24px);line-height:1.3}
+.grid{display:grid;grid-template-columns:200px 1fr;gap:16px;margin-top:18px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}header{flex-direction:column}}
+.filter{background:var(--side);border-radius:4px;box-shadow:0 2px 4px #0004;margin-bottom:16px;overflow:hidden;color:#111}
+.filter h4{margin:0;background:var(--red);color:#fff;padding:8px 14px;font-size:15px}
+.filter .list{padding:8px 10px;max-height:150px;overflow:auto}
+.filter label{display:flex;align-items:center;gap:8px;padding:5px 2px;font-size:13px;cursor:pointer}
+.filter input[type=text]{width:100%;border:0;border-bottom:1px solid #888;background:var(--sideh);padding:8px 10px;font:inherit;font-size:13px;color:#111}
+.top{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.pie{flex:1;min-width:230px}
+.pie h3{margin:0 0 8px;font-size:15px}
+.pie-row{display:flex;align-items:center;gap:10px;font-size:11px}
+.pie-c{width:140px;height:140px;border-radius:50%;background:conic-gradient(#b07fe6 0 100%);display:flex;align-items:center;justify-content:center;font-size:10px;color:#222}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#b07fe6;margin-right:4px}
+.kpis{display:flex;gap:16px;flex:1.4;min-width:260px}
+.kpi{flex:1;text-align:center}
+.kpi b{display:block;font-size:17px;margin-bottom:6px}
+.kpi div{background:var(--card);border-radius:12px;padding:6px;color:#111;font-size:11px}
+.kpi div span{display:block;font-size:26px;font-weight:600}
+.panels{display:grid;grid-template-columns:230px 1fr;gap:16px;margin-top:16px}
+@media(max-width:800px){.panels{grid-template-columns:1fr}}
+.bar{background:var(--red2);color:#fff;text-align:center;font-weight:700;padding:7px;border-radius:5px;font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:var(--navy);color:#fff;padding:7px 6px}
+.t1 td{background:var(--row);padding:8px;border-bottom:1px solid var(--navy);text-align:center}
+.t2 td{background:var(--teal);color:#06262b;padding:9px 8px;border-bottom:1px solid #00695c;text-align:center}
+.foot{background:var(--teal2);color:#fff;text-align:right;padding:6px 12px;font-size:11px}
+.scroll{overflow:auto;max-height:280px}
+.big{margin-top:16px}
+.big .bar{font-size:20px;border-radius:12px;padding:10px;margin-bottom:8px}
+.xs{overflow-x:auto}
+.t3 td{background:var(--row);padding:9px 6px;text-align:center;border-bottom:1px solid #fff}
+.t3 td:first-child{background:var(--side);color:#111;font-weight:600}
+.t3 th{font-size:12px;white-space:nowrap}
+.low{color:#c62828;font-weight:700}
+
+.tabs{display:flex;gap:8px;margin:14px 0 0}
+.tabs button,.btn{border:0;border-radius:20px;padding:8px 18px;font:inherit;font-weight:600;cursor:pointer;background:var(--side);color:#111}
+.tabs button.on,.btn.p{background:var(--navy);color:#fff}
+.btn.d{background:var(--red2);color:#fff;padding:4px 10px;font-size:12px}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0;align-items:end}
+.form label{font-size:12px;display:flex;flex-direction:column;gap:3px}
+.form input,.form select{font:inherit;font-size:14px;padding:7px;border:1px solid #888;border-radius:6px;background:var(--bg);color:var(--fg);width:100%}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin:12px 0}
+.card{border:1px solid var(--side);border-radius:10px;padding:12px;margin-top:12px}
+.hide{display:none}
+.legend{font-size:11px;display:flex;flex-direction:column;gap:3px}
+.lj svg{width:100%;height:auto;display:block}
+.flag{font-size:13px;margin:4px 0;padding:6px 10px;border-radius:6px;background:#ffebee;color:#b71c1c}
+.ok{background:#e8f5e9;color:#1b5e20}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo">โรงพยาบาล<br>วังเจ้า</div>
+  <div class="title">Dashboard สรุปผลการควบคุมคุณภาพการตรวจวิเคราะห์โดยองค์กรภายนอก (EQA)<br>กลุ่มงานเทคนิคการแพทย์ โรงพยาบาลวังเจ้า จังหวัดตาก</div>
+</header>
+
+<div class="tabs"><button class="on" id="tabD" onclick="showTab('dash')">แดชบอร์ด</button><button id="tabL" onclick="showTab('lj')">Levey-Jennings</button><button id="tabE" onclick="showTab('entry')">คีย์ข้อมูล</button></div><div id="dash"><div class="grid">
+  <aside>
+    <div class="filter"><h4>ปี</h4><div class="list" id="years"></div></div>
+    <div class="filter"><h4>งาน</h4><div class="list" id="units"></div></div>
+  </aside>
+  <main>
+    <div class="top">
+      <div class="pie"><h3>จำนวนรายการที่เปิดทำ EQA ตามกลุ่มงาน</h3>
+        <div class="pie-row"><div class="pie-c" id="pie"></div><div class="legend" id="legend"></div></div></div>
+      <div class="kpis">
+        <div class="kpi"><b>รายการที่เปิดทำ EQA</b><div>จำนวน<span id="kOpen">2</span></div></div>
+        <div class="kpi"><b>รายการที่ยังไม่เปิดทำ EQA</b><div>จำนวน<span id="kNot">27</span></div></div>
+      </div>
+    </div>
+    <div class="panels">
+      <div><div class="bar">รายการทดสอบที่ยังไม่ทำ EQA</div>
+        <div class="scroll" style="max-height:230px"><table class="t1"><thead><tr><th>รายการทดสอบ</th></tr></thead><tbody id="notDone"></tbody></table></div>
+        <div class="foot" id="notFoot" style="text-align:center"></div></div>
+      <div><div class="bar">รายการทดสอบที่เปิดทำ EQA</div>
+        <div class="scroll" style="max-height:230px"><table class="t2"><thead><tr><th style="width:40%">รายการทดสอบ</th><th>เกณฑ์การยอมรับ</th><th>ครั้ง/ปี</th></tr></thead><tbody id="done"></tbody></table></div>
+        <div class="foot" id="doneFoot"></div></div>
+    </div>
+  </main>
+</div>
+
+<section class="big">
+  <div class="bar">ตารางแสดงการควบคุมคุณภาพการตรวจวิเคราะห์โดยองค์กรภายนอก</div>
+  <div class="xs"><table class="t3"><thead><tr><th>งาน</th><th>ลำดับ</th><th>ม.ค.</th><th>ก.พ.</th><th>มี.ค.</th><th>เม.ย.</th><th>พ.ค.</th><th>มิ.ย.</th><th>ก.ค.</th><th>ส.ค.</th><th>ก.ย.</th><th>ต.ค.</th><th>พ.ย.</th><th>ธ.ค.</th></tr></thead><tbody id="monthly"></tbody></table></div>
+  <div class="foot" id="monFoot" style="text-align:center"></div>
+</section>
+</div>
+<section id="lj" class="hide lj">
+ <div class="card"><div class="bar">Levey-Jennings Chart</div>
+  <div class="form">
+   <label>รายการทดสอบ<input id="ljTest" list="ljList" placeholder="เช่น Glucose"></label><datalist id="ljList"></datalist>
+   <label>Mean<input id="ljMean" type="number" step="any"></label>
+   <label>SD<input id="ljSD" type="number" step="any"></label>
+   <button class="btn" onclick="ljCalc()">คำนวณ Mean/SD จากข้อมูล</button>
+  </div>
+  <div class="form">
+   <label>วันที่<input id="ljDate" type="date"></label>
+   <label>ค่า QC<input id="ljVal" type="number" step="any"></label>
+   <button class="btn p" onclick="ljAdd()">เพิ่มจุดข้อมูล</button>
+   <button class="btn d" onclick="ljClear()">ล้างจุดของรายการนี้</button>
+  </div>
+  <div id="ljChart"></div>
+  <div id="ljFlags"></div>
+  <div class="scroll" style="max-height:200px"><table class="t1"><thead><tr><th>#</th><th>วันที่</th><th>ค่า</th><th>Z</th><th></th></tr></thead><tbody id="ljRows"></tbody></table></div>
+ </div>
+</section>
+<section id="entry" class="hide">
+ <div class="card"><div class="bar">1) เพิ่ม/แก้ไข รายการทดสอบ</div>
+  <div class="form">
+   <label>รายการทดสอบ<input id="tName" placeholder="เช่น Glucose"></label>
+   <label>งาน<select id="tUnit"></select></label>
+   <label>เกณฑ์การยอมรับ<input id="tCrit" value="Z-score evaluation ≤ 2.00"></label>
+   <label>ครั้ง/ปี<input id="tTimes" type="number" min="0" value="24"></label>
+   <label>สถานะ<select id="tOpen"><option value="1">เปิดทำ EQA</option><option value="0">ยังไม่เปิดทำ</option></select></label>
+   <button class="btn p" onclick="addTest()">เพิ่มรายการ</button>
+  </div>
+  <div class="scroll"><table class="t1"><thead><tr><th>รายการ</th><th>งาน</th><th>เกณฑ์</th><th>ครั้ง/ปี</th><th>สถานะ</th><th></th></tr></thead><tbody id="tList"></tbody></table></div>
+ </div>
+ <div class="card"><div class="bar">2) คีย์คะแนนควบคุมคุณภาพรายเดือน</div>
+  <div class="form">
+   <label>ปี (พ.ศ.)<input id="sYear" type="number" value="2569"></label>
+   <label>งาน<select id="sUnit"></select></label>
+   <label>ลำดับ<input id="sOrder" type="number"></label>
+  </div>
+  <div class="mgrid" id="mgrid"></div>
+  <button class="btn p" onclick="saveScore()">บันทึกคะแนน</button> <span id="msg" style="font-size:13px"></span>
+ </div>
+ <div class="card"><div class="bar">3) สำรอง/นำเข้าข้อมูล</div>
+  <p style="font-size:13px">ข้อมูลถูกเก็บในเบราว์เซอร์เครื่องนี้ ควรกดส่งออกเก็บไว้เป็นไฟล์เป็นระยะ</p>
+  <button class="btn p" onclick="exportData()">ส่งออก JSON</button>
+  <label class="btn">นำเข้า JSON<input type="file" accept=".json" hidden onchange="importData(this)"></label>
+  <button class="btn d" onclick="resetData()">ล้างข้อมูลทั้งหมด</button>
+ </div>
+</section>
+</div>
+<script>
+const UNITS=['จุลชีววิทยา','ภูมิคุ้มกันวิทยา','ธนาคารเลือด','เกณฑ์การควบคุมคุณภาพ ≥ 80','จุลทรรศนศาสตร์คลินิก','โลหิตวิทยา','เคมีคลินิก'];
+const COLORS=['#b07fe6','#4db6ac','#ffb74d','#64b5f6','#f06292','#aed581','#ba68c8'];
+const KEY='eqa-data-v1';
+let D={tests:[],scores:{}};
+const demo=()=>({tests:[['Glucose','เคมีคลินิก'],['Total protein','เคมีคลินิก'],['Creatinine','เคมีคลินิก'],['Hb','โลหิตวิทยา'],['Hct','โลหิตวิทยา']].map((r,i)=>({id:i+1,name:r[0],unit:r[1],crit:'Z-score evaluation ≤ 2.00',times:24,open:i<2||i==3?1:0})),
+ scores:{'2569':{'เคมีคลินิก':{order:2,m:[195.45,186.36,172.07,190.45,190.91,195.45,189.89,181.1,189.89,100,95.45,95.45]},'โลหิตวิทยา':{order:4,m:[180.83,180.83,180.83,187.08,180.42,180.42,186.61,186.61,193.75,81.25,81.25,81.25]}}}});
+try{D=JSON.parse(localStorage.getItem(KEY))||demo()}catch(e){D=demo()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){}}
+const $=id=>document.getElementById(id);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let selUnits=new Set(UNITS),selYears=new Set(['2569']);
+function years(){return [...new Set(['2568','2569',...Object.keys(D.scores)])].sort()}
+function filters(){
+  $('years').innerHTML=years().map(y=>`<label><input type="checkbox" value="${y}" ${selYears.has(y)?'checked':''}> ${y}</label>`).join('');
+  $('units').innerHTML=UNITS.map(u=>`<label><input type="checkbox" value="${u}" ${selUnits.has(u)?'checked':''}> ${u}</label>`).join('');
+}
+$('years').onchange=e=>{e.target.checked?selYears.add(e.target.value):selYears.delete(e.target.value);render()};
+$('units').onchange=e=>{e.target.checked?selUnits.add(e.target.value):selUnits.delete(e.target.value);render()};
+function render(){
+  const open=D.tests.filter(t=>t.open==1&&selUnits.has(t.unit)),not=D.tests.filter(t=>t.open!=1&&selUnits.has(t.unit));
+  $('kOpen').textContent=open.length;$('kNot').textContent=not.length;
+  const cnt={};open.forEach(t=>cnt[t.unit]=(cnt[t.unit]||0)+1);
+  const ks=Object.keys(cnt),tot=open.length;let acc=0;
+  $('pie').style.background=tot?'conic-gradient('+ks.map(k=>{const a=acc;acc+=cnt[k]/tot*100;return `${COLORS[UNITS.indexOf(k)%7]} ${a}% ${acc}%`}).join(',')+')':'#ccc';
+  $('pie').textContent=tot?'':'ไม่มีข้อมูล';
+  $('legend').innerHTML=ks.map(k=>`<span><i class="dot" style="background:${COLORS[UNITS.indexOf(k)%7]}"></i>${esc(k)} (${cnt[k]}, ${Math.round(cnt[k]/tot*100)}%)</span>`).join('');
+  $('notDone').innerHTML=not.map((t,i)=>`<tr><td>${i+1}. &nbsp; ${esc(t.name)}</td></tr>`).join('');
+  $('notFoot').textContent=`1 - ${not.length} / ${not.length}`;
+  $('done').innerHTML=open.map((t,i)=>`<tr><td>${i+1}. &nbsp; ${esc(t.name)}</td><td>${esc(t.crit)}</td><td>${t.times}</td></tr>`).join('');
+  $('doneFoot').textContent=`1 - ${open.length} / ${open.length}`;
+  let rows='',n=0;
+  [...selYears].sort().forEach(y=>{UNITS.filter(u=>selUnits.has(u)&&D.scores[y]&&D.scores[y][u]).forEach(u=>{n++;const r=D.scores[y][u];
+    rows+=`<tr><td>${esc(u)} <small>(${y})</small></td><td>${r.order??''}</td>`+r.m.map(v=>v===''||v==null?'<td>-</td>':`<td class="${v<96?'low':''}">${Number(v).toFixed(2)}</td>`).join('')+'</tr>'})});
+  $('monthly').innerHTML=rows||'<tr><td colspan="14">ยังไม่มีข้อมูล ไปที่แท็บ "คีย์ข้อมูล"</td></tr>';
+  $('monFoot').textContent=`1 - ${n} / ${n}`;
+}
+function showTab(t){['dash','lj','entry'].forEach(x=>{$(x).classList.toggle('hide',x!=t);$('tab'+{dash:'D',lj:'L',entry:'E'}[x]).classList.toggle('on',x==t)});if(t=='dash')render();else if(t=='lj')ljUI();else entryUI()}
+function entryUI(){
+  ['tUnit','sUnit'].forEach(id=>{if(!$(id).options.length)$(id).innerHTML=UNITS.map(u=>`<option>${u}</option>`).join('')});
+  if(!$('mgrid').children.length)$('mgrid').innerHTML=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'].map((m,i)=>`<label style="font-size:12px">${m}<input type="number" step="0.01" style="width:100%;font:inherit;padding:6px;border:1px solid #888;border-radius:6px;background:var(--bg);color:var(--fg)"></label>`).join('');
+  loadScore();
+  $('tList').innerHTML=D.tests.map(t=>`<tr><td>${esc(t.name)}</td><td>${esc(t.unit)}</td><td>${esc(t.crit)}</td><td>${t.times}</td><td><button class="btn" onclick="toggleTest(${t.id})">${t.open==1?'เปิดทำ ✓':'ยังไม่เปิด'}</button></td><td><button class="btn d" onclick="delTest(${t.id})">ลบ</button></td></tr>`).join('')||'<tr><td colspan="6">ยังไม่มีรายการ</td></tr>';
+}
+function addTest(){const name=$('tName').value.trim();if(!name){$('tName').focus();return}
+  D.tests.push({id:Date.now(),name,unit:$('tUnit').value,crit:$('tCrit').value,times:+$('tTimes').value||0,open:+$('tOpen').value});
+  $('tName').value='';save();entryUI()}
+function toggleTest(id){const t=D.tests.find(x=>x.id==id);t.open=t.open==1?0:1;save();entryUI()}
+function delTest(id){if(confirm('ลบรายการนี้?')){D.tests=D.tests.filter(x=>x.id!=id);save();entryUI()}}
+function loadScore(){const r=(D.scores[$('sYear').value]||{})[$('sUnit').value];
+  $('sOrder').value=r?r.order:'';document.querySelectorAll('#mgrid input').forEach((el,i)=>el.value=r&&r.m[i]!==''&&r.m[i]!=null?r.m[i]:'')}
+$('sYear').onchange=$('sUnit').onchange=loadScore;
+function saveScore(){const y=$('sYear').value.trim();if(!y)return;
+  const m=[...document.querySelectorAll('#mgrid input')].map(e=>e.value===''?'':+e.value);
+  (D.scores[y]=D.scores[y]||{})[$('sUnit').value]={order:$('sOrder').value===''?'':+$('sOrder').value,m};
+  selYears.add(y);save();$('msg').textContent='บันทึกแล้ว ✓';setTimeout(()=>$('msg').textContent='',2000);filters()}
+function exportData(){const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(D,null,1));a.download='eqa-data.json';a.click()}
+function importData(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{D=JSON.parse(r.result);save();filters();entryUI();alert('นำเข้าสำเร็จ')}catch(e){alert('ไฟล์ไม่ถูกต้อง')}};r.readAsText(f)}
+function resetData(){if(confirm('ล้างข้อมูลทั้งหมด?')){D={tests:[],scores:{}};save();filters();entryUI()}}
+
+function ljData(){D.lj=D.lj||{};const n=$('ljTest').value.trim();if(!n)return null;return D.lj[n]=D.lj[n]||{mean:'',sd:'',pts:[]}}
+function ljUI(){D.lj=D.lj||{};
+  if(!Object.keys(D.lj).length){D.lj={'Glucose':{mean:100,sd:3,pts:[100,102,98,101,99,103,97,100,104,106,105,107,102,99,96,94,95,93,98,101,110].map((v,i)=>({d:'2569-01-'+String(i+1).padStart(2,'0'),v}))}};}
+  const names=[...new Set([...D.tests.map(t=>t.name),...Object.keys(D.lj)])];
+  $('ljList').innerHTML=names.map(n=>`<option value="${esc(n)}">`).join('');
+  if(!$('ljTest').value)$('ljTest').value=Object.keys(D.lj)[0]||'';
+  ljDraw()}
+$('ljTest').onchange=()=>{const d=ljData();if(d){$('ljMean').value=d.mean;$('ljSD').value=d.sd}ljDraw()};
+$('ljMean').onchange=$('ljSD').onchange=()=>{const d=ljData();if(!d)return;d.mean=$('ljMean').value===''?'':+$('ljMean').value;d.sd=$('ljSD').value===''?'':+$('ljSD').value;save();ljDraw()};
+function ljCalc(){const d=ljData();if(!d||d.pts.length<2)return alert('ต้องมีข้อมูลอย่างน้อย 2 จุด');
+  const v=d.pts.map(p=>p.v),m=v.reduce((a,b)=>a+b,0)/v.length,sd=Math.sqrt(v.reduce((a,b)=>a+(b-m)**2,0)/(v.length-1));
+  d.mean=+m.toFixed(3);d.sd=+sd.toFixed(3);$('ljMean').value=d.mean;$('ljSD').value=d.sd;save();ljDraw()}
+function ljAdd(){const d=ljData();if(!d)return $('ljTest').focus();const v=$('ljVal').value;if(v==='')return $('ljVal').focus();
+  d.pts.push({d:$('ljDate').value,v:+v});$('ljVal').value='';save();ljDraw()}
+function ljDel(i){ljData().pts.splice(i,1);save();ljDraw()}
+function ljClear(){const d=ljData();if(d&&confirm('ล้างจุดข้อมูลของรายการนี้?')){d.pts=[];save();ljDraw()}}
+function ljDraw(){const d=ljData();
+  if(!d){$('ljChart').innerHTML='';$('ljFlags').innerHTML='';$('ljRows').innerHTML='';return}
+  $('ljMean').value=d.mean;$('ljSD').value=d.sd;
+  const m=+d.mean,sd=+d.sd;
+  if(d.mean===''||!sd){$('ljChart').innerHTML='<p>กรอก Mean และ SD (หรือกด "คำนวณ Mean/SD จากข้อมูล") เพื่อแสดงกราฟ</p>';
+    $('ljRows').innerHTML=d.pts.map((p,i)=>`<tr><td>${i+1}</td><td>${p.d||'-'}</td><td>${p.v}</td><td>-</td><td><button class="btn d" onclick="ljDel(${i})">ลบ</button></td></tr>`).join('');$('ljFlags').innerHTML='';return}
+  const W=760,H=360,L=56,R=20,T=16,B=36,n=Math.max(d.pts.length,2);
+  const y=v=>T+(m+4*sd-Math.max(m-4*sd,Math.min(m+4*sd,v)))/(8*sd)*(H-T-B);
+  const x=i=>L+(i/(n-1))*(W-L-R);
+  const z=d.pts.map(p=>(p.v-m)/sd);
+  let g='';
+  [[3,'#c62828','4 3'],[2,'#ef6c00','4 3'],[1,'#888','2 3'],[0,'#2e7d32','']].forEach(([k,c,da])=>{(k?[k,-k]:[0]).forEach(s=>{const yy=y(m+s*sd);
+    g+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="${c}" stroke-width="${k?1:1.6}" stroke-dasharray="${da}"/><text x="${L-6}" y="${yy+4}" text-anchor="end" font-size="11" fill="${c}">${k?(s>0?'+':'-')+k+'SD':'Mean'}</text><text x="${W-R}" y="${yy-3}" text-anchor="end" font-size="10" fill="currentColor" opacity=".7">${+(m+s*sd).toFixed(2)}</text>`})});
+  const line=d.pts.map((p,i)=>`${x(i)},${y(p.v)}`).join(' ');
+  const dots=d.pts.map((p,i)=>{const a=Math.abs(z[i]);const c=a>3?'#c62828':a>2?'#ef6c00':'#3949ab';
+    return `<circle cx="${x(i)}" cy="${y(p.v)}" r="4.5" fill="${c}"><title>#${i+1} ${p.d||''} = ${p.v} (z=${z[i].toFixed(2)})</title></circle><text x="${x(i)}" y="${H-B+16}" text-anchor="middle" font-size="10" fill="currentColor" opacity=".7">${i+1}</text>`}).join('');
+  $('ljChart').innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Levey-Jennings chart">${g}<polyline points="${line}" fill="none" stroke="#3949ab" stroke-width="1.5"/>${dots}</svg>`;
+  const f=[],sg=v=>Math.sign(v);
+  z.forEach((v,i)=>{
+    if(Math.abs(v)>3)f.push(`จุด ${i+1}: 1-3s เกิน ±3SD`);
+    if(i>0&&Math.abs(v)>2&&Math.abs(z[i-1])>2&&sg(v)==sg(z[i-1]))f.push(`จุด ${i}-${i+1}: 2-2s สองจุดติดกันเกิน 2SD ด้านเดียวกัน`);
+    if(i>0&&Math.abs(v-z[i-1])>4)f.push(`จุด ${i}-${i+1}: R-4s ต่างกันเกิน 4SD`);
+    if(i>=3&&z.slice(i-3,i+1).every(q=>q>1)||i>=3&&z.slice(i-3,i+1).every(q=>q<-1))f.push(`จุด ${i-2}-${i+1}: 4-1s สี่จุดติดกันเกิน 1SD ด้านเดียวกัน`);
+    if(i>=9&&(z.slice(i-9,i+1).every(q=>q>0)||z.slice(i-9,i+1).every(q=>q<0)))f.push(`จุด ${i-8}-${i+1}: 10x สิบจุดติดกันด้านเดียวกันของ Mean`);
+  });
+  $('ljFlags').innerHTML=f.length?f.map(t=>`<div class="flag">⚠ ${t}</div>`).join(''):'<div class="flag ok">ไม่พบการละเมิดกฎ Westgard (1-3s, 2-2s, R-4s, 4-1s, 10x)</div>';
+  $('ljRows').innerHTML=d.pts.map((p,i)=>`<tr><td>${i+1}</td><td>${p.d||'-'}</td><td>${p.v}</td><td>${z[i].toFixed(2)}</td><td><button class="btn d" onclick="ljDel(${i})">ลบ</button></td></tr>`).join('')}
+filters();render();
+</script>
+</body>
+</html>
